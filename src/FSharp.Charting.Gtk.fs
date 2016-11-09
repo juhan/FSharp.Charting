@@ -730,7 +730,7 @@ namespace FSharp.Charting
             let ensureDefaultAxis (X) =
                 match model.Axes |> Seq.tryFind (fun x -> (if X then x.IsHorizontal() else x.IsVertical()) && x.IsXyAxis()) with 
                 | None -> 
-                    let axis = Axes.LinearAxis(if X then Axes.AxisPosition.Bottom else Axes.AxisPosition.Left)
+                    let axis = Axes.LinearAxis()
                     model.Axes.Add axis
                     axis :> Axes.Axis
                 | Some a -> a
@@ -979,7 +979,6 @@ namespace FSharp.Charting
             let data'' = bins |> Seq.map (fun b -> ( sprintf "%.2f" b.LowerBound), b.Count)
             Chart.Column(data'',?Name=Name,?Title=Title,?Color=Color,?XTitle=XTitle,?YTitle=YTitle, ?ColumnWidth=Some 0.95)
 
-#if INCOMPLETE_API
         /// <summary>Similar to the Pie chart type, except that it has a hole in the center.</summary>
         /// <param name="data">The data for the chart.</param>
         /// <param name="Name">The name of the data set.</param>
@@ -989,8 +988,12 @@ namespace FSharp.Charting
         /// <param name="XTitle">The title of the X-axis.</param>
         /// <param name="YTitle">The title of the Y-axis.</param>
         static member Doughnut(data,?Name,?Title,?Labels, ?Color,?XTitle,?YTitle) = 
-            GenericChart.Create(data |> mergeLabels Labels |> makeItems, fun () -> DoughnutChart ())
+           GenericChart.Create(data |> listen |> makeItems (fun (x,y) -> PieChartItem(keyToString x,y)), PieSeries(LabelField="Label",ValueField="Value"))
              |> Helpers.ApplyStyles(?Name=Name,?Title=Title,?Color=Color,?AxisXTitle=XTitle,?AxisYTitle=YTitle)
+//            GenericChart.Create(data |> mergeLabels Labels |> makeItems, fun () -> DoughnutChart ())
+//             |> Helpers.ApplyStyles(?Name=Name,?Title=Title,?Color=Color,?AxisXTitle=XTitle,?AxisYTitle=YTitle)
+
+
 
         /// <summary>Similar to the Pie chart type, except that it has a hole in the center.</summary>
         /// <param name="data">The data for the chart.</param>
@@ -1000,10 +1003,11 @@ namespace FSharp.Charting
         /// <param name="Color">The color for the data.</param>
         /// <param name="XTitle">The title of the X-axis.</param>
         /// <param name="YTitle">The title of the Y-axis.</param>
-        static member Doughnut(data,?Name,?Title,?Labels, ?Color,?XTitle,?YTitle) = 
+(*        static member Doughnut(data,?Name,?Title,?Labels, ?Color,?XTitle,?YTitle) = 
             GenericChart.Create(mergeDataAndLabelsForY data Labels, fun () -> DoughnutChart ())
              |> Helpers.ApplyStyles(?Name=Name,?Title=Title,?Color=Color,?AxisXTitle=XTitle,?AxisYTitle=YTitle)
-
+*)
+#if INCOMPLETE_API
         /// <summary>Consists of lines with markers that are used to display statistical information about the data displayed in a graph.</summary>
         /// <param name="data">The data for the chart.</param>
         /// <param name="Name">The name of the data set.</param>
@@ -1151,6 +1155,20 @@ namespace FSharp.Charting
            GenericChart.Create(data |> listen |> makeItems (fun (x,y) -> PieChartItem(keyToString x,y)), PieSeries(LabelField="Label",ValueField="Value"))
              |> Helpers.ApplyStyles(?Name=Name,?Title=Title,?Color=Color,?AxisXTitle=XTitle,?AxisYTitle=YTitle)
 
+(*                    var modelP1 = new PlotModel { Title = "Pie Sample1" };
+
+        dynamic seriesP1 = new PieSeries { StrokeThickness = 2.0, InsideLabelPosition = 0.5, AngleSpan = 360, StartAngle = 0, InnerDiameter = 0.4 };
+
+        seriesP1.Slices.Add(new PieSlice("Africa", 1030) { IsExploded = false, Fill = OxyColors.PaleVioletRed });
+        seriesP1.Slices.Add(new PieSlice("Americas", 929) { IsExploded = true });
+        seriesP1.Slices.Add(new PieSlice("Asia", 4157) { IsExploded = true });
+        seriesP1.Slices.Add(new PieSlice("Europe", 739) { IsExploded = true });
+        seriesP1.Slices.Add(new PieSlice("Oceania", 35) { IsExploded = true });
+
+        modelP1.Series.Add(seriesP1);
+
+        return modelP1;
+*)
         /// <summary>Shows how proportions of data, shown as pie-shaped pieces, contribute to the data as a whole.</summary>
         /// <param name="data">The data for the chart.</param>
         /// <param name="Name">The name of the data set.</param>
@@ -1852,7 +1870,6 @@ namespace FSharp.Charting
         static member ColumnIncremental(data:IObservable<#key * #value>,?Name,?Title,(* ?Labels, *) ?Color,?XTitle,?YTitle,?ColumnWidth) = 
             Chart.Column(NotifySeq.ofObservableIncremental data,?Name=Name,?Title=Title(* ,?Labels=Labels *),?Color=Color,?XTitle=XTitle,?YTitle=YTitle, ?ColumnWidth=ColumnWidth)
 
-#if INCOMPLETE_API
         /// <summary>Similar to the Pie chart type, except that it has a hole in the center.</summary>
         /// <param name="data">The data for the chart. Each observation replaces the entire data on the chart.</param>
         /// <param name="Name">The name of the data set.</param>
@@ -1864,6 +1881,7 @@ namespace FSharp.Charting
         static member Doughnut(data:IObservable<#seq<#key * #value>>,?Name,?Title (* ,?Labels *) , ?Color,?XTitle,?YTitle) = 
             Chart.Doughnut(NotifySeq.ofObservableReplacing data,?Name=Name,?Title=Title,?Color=Color,?XTitle=XTitle,?YTitle=YTitle)
 
+#if INCOMPLETE_API
         /// <summary>Consists of lines with markers that are used to display statistical information about the data displayed in a graph.</summary>
         /// <param name="data">The data for the chart. Each observation replaces the entire data on the chart.</param>
         /// <param name="Name">The name of the data set.</param>
