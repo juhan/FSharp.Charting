@@ -987,8 +987,8 @@ namespace FSharp.Charting
         /// <param name="Color">The color for the data.</param>
         /// <param name="XTitle">The title of the X-axis.</param>
         /// <param name="YTitle">The title of the Y-axis.</param>
-        static member Doughnut(data,?Name,?Title,?Labels, ?Color,?XTitle,?YTitle) = 
-           GenericChart.Create(data |> listen |> makeItems (fun (x,y) -> PieChartItem(keyToString x,y)), PieSeries(LabelField="Label",ValueField="Value"))
+        static member Doughnut(data,?Name,?Title,?Labels,?Color,?XTitle,?YTitle) = 
+           GenericChart.Create(data |> listen |> makeItems (fun (x,y) -> PieChartItem(keyToString x,y)), PieSeries(LabelField="Label",ValueField="Value", InnerDiameter = 0.2))
              |> Helpers.ApplyStyles(?Name=Name,?Title=Title,?Color=Color,?AxisXTitle=XTitle,?AxisYTitle=YTitle)
 //            GenericChart.Create(data |> mergeLabels Labels |> makeItems, fun () -> DoughnutChart ())
 //             |> Helpers.ApplyStyles(?Name=Name,?Title=Title,?Color=Color,?AxisXTitle=XTitle,?AxisYTitle=YTitle)

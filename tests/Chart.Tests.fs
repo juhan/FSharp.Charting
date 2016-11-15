@@ -2,6 +2,7 @@
 
 (*
 #load "../bin/FSharp.Charting.fsx"
+#load "../bin/FSharp.Charting.Gtk.fsx"
 *)
 
 open NUnit.Framework
